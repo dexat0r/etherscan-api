@@ -24,7 +24,7 @@
 ### Standalone
  - Clone the repository
  - Copy and rename ".env.example" file to ".env"
- - Fill in database credentials and etherscan api key. Keep in mind that you haven't to bootstrap database by yourself
+ - Fill in database credentials and etherscan api key. Keep in mind that you have to bootstrap database by yourself!
     ```js
     DB_HOST=    // Dataabse host
     DB_PORT=    // Database port
