@@ -1,0 +1,16 @@
+{
+  "database": {
+    "host": "DB_HOST",
+    "port": {
+      "__name": "DB_PORT",
+      "__format": "number"
+    },
+    "username": "DB_USER",
+    "password": "DB_PWD",
+    "database": "DB_DB",
+    "schema": "DB_SCHEMA"
+  },
+  "etherscan": {
+    "apiKey": "ETHERSCAN_APIKEY"
+  }
+}

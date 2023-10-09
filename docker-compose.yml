@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  
+  backend:
+    build: ./
+    container_name: api
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    ports:
+      - "3000:3000"
+    command: sh -c "
+      npm run typeorm:bootstrap &&
+      npm run typeorm:migration:run &&
+      npm run start:prod"
+
+
+  postgres:
+    image: postgres
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PWD}
+      - POSTGRES_DATABASE=${DB_DB}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - '5434:5432'
+
+volumes:
+  pgdata:
