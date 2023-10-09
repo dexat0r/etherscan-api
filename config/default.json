@@ -1,5 +1,6 @@
 {
   "etherscan": {
     "url": "https://api.etherscan.io"
-  }
+  },
+  "initBlock": 18314420
 }

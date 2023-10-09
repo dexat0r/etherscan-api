@@ -10,4 +10,5 @@ export type GetMostChangedAddressByAbs = {
   from: number;
   to: number;
   mostChangedAddress: string;
+  value: string;
 };

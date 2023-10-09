@@ -14,20 +14,18 @@ export class TransactionController {
 
   @Get()
   public getMostChangedAddress(
-    @Query('period', new ParseIntPipe()) period: number,
+    @Query('period', new ParseIntPipe({ optional: true })) period: number,
   ) {
-    if (!period)
-      throw new HttpException('Invalid period', HttpStatus.BAD_REQUEST);
+    period = period ?? 100;
 
-    try {
-      return this.transactionService.getMostChangedAddressByAbs(period);
-    } catch (error) {
-      console.log(error);
-      throw new HttpException(
-        'Server error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        { description: error.message ?? error },
-      );
-    }
+    return this.transactionService
+      .getMostChangedAddressByAbs(period)
+      .catch((error) => {
+        throw new HttpException(
+          error.message ?? 'Server error',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+          { description: error.message },
+        );
+      });
   }
 }

@@ -20,26 +20,34 @@ export class TransactionService {
   ): Promise<GetMostChangedAddressByAbs> {
     const { from, to, txs } = await this.getTransactionsByBlockPeriod(period);
     const addresses = await this.getAddressChanges(txs);
-    const mostChangedAddress = this.getMostChangedAddress(addresses);
+    const { mostChangedAddress, value } = this.getMostChangedAddress(addresses);
 
     return {
       from,
       to,
       mostChangedAddress,
+      value: value.toString(),
     };
   }
 
   private async getTransactionsByBlockPeriod(
     period: number,
   ): Promise<GetTransactionsByBlockPeriod> {
-    const { blockNumber } = await this.getLastBlock();
+    const lastSavedBlock = await this.getLastBlock();
 
-    if (!blockNumber) throw new Error('No blocks saved');
+    if (!lastSavedBlock) throw new Error('No blocks saved');
 
-    const blocksInPeriod = await this.getBlocksInPeriod(blockNumber, period);
+    const { blockNumber } = lastSavedBlock;
+
+    const [blocksInPeriod, blockAmount] = await this.getBlocksInPeriod(
+      blockNumber,
+      period,
+    );
+
+    if (blockAmount < period) throw new Error('Not enough blocks saved');
 
     const txs = blocksInPeriod.reduce<TransactionEntity[]>((arr, block) => {
-      arr.concat(block.txs);
+      arr = arr.concat(block.txs);
       return arr;
     }, []);
 
@@ -64,14 +72,19 @@ export class TransactionService {
     return addresses;
   }
 
-  private getMostChangedAddress = (obj: Record<string, bigint>): string => {
+  private getMostChangedAddress = (obj: Record<string, bigint>) => {
     function abs(a: bigint) {
       return a > 0n ? a : -a;
     }
 
-    return Object.keys(obj).reduce((maxKey, key) =>
+    const mostChangedAddress = Object.keys(obj).reduce((maxKey, key) =>
       abs(obj[key]) > abs(obj[maxKey]) ? key : maxKey,
     );
+
+    return {
+      mostChangedAddress,
+      value: obj[mostChangedAddress],
+    };
   };
 
   private async getLastBlock(): Promise<BlockEntity> {
@@ -86,8 +99,8 @@ export class TransactionService {
   private async getBlocksInPeriod(
     from: number,
     period: number,
-  ): Promise<BlockEntity[]> {
-    return this.blockRepository.find({
+  ): Promise<[BlockEntity[], number]> {
+    return this.blockRepository.findAndCount({
       where: {
         blockNumber: LessThan(from),
       },

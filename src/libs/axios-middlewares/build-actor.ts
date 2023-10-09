@@ -10,6 +10,7 @@ const buildActor = () => {
           const { data }: AxiosResponse = await originalMethod(...params);
           return data;
         } catch (error) {
+          console.log(error);
           if (error.isAxiosError) {
             const { response } = error;
 

@@ -21,8 +21,8 @@ export class TransactionEntity {
   @Column('text', { nullable: true })
   value: string;
 
-  @Column('text')
-  blockNumber: string;
+  @Column('integer')
+  blockNumber: number;
 
   @ManyToOne(() => BlockEntity)
   @JoinColumn({ name: 'blockNumber', referencedColumnName: 'blockNumber' })

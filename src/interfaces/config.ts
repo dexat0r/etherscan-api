@@ -11,4 +11,5 @@ export interface Config {
     url: string;
     apiKey: string;
   };
+  initBlock: number;
 }

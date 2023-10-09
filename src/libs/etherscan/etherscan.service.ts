@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import * as config from 'config';
 import { buildActor } from '../axios-middlewares/build-actor';
+import { GetBlockByNumber, GetLastBlock } from './interfaces';
 
 const ApiActor = buildActor();
 
@@ -16,7 +17,9 @@ export class EtherscanService {
   });
 
   @ApiActor()
-  public async getTransactionsByBlockNumber(blockNumber: number) {
+  public async getTransactionsByBlockNumber(
+    blockNumber: number,
+  ): Promise<GetBlockByNumber> {
     return EtherscanService.transport.get('api', {
       params: {
         action: 'eth_getBlockByNumber',
@@ -27,7 +30,7 @@ export class EtherscanService {
   }
 
   @ApiActor()
-  public async getLastBlockNumber() {
+  public async getLastBlockNumber(): Promise<GetLastBlock> {
     return EtherscanService.transport.get('api', {
       params: {
         action: 'eth_blockNumber',
