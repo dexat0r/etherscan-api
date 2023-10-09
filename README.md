@@ -55,3 +55,10 @@ Response:
      value: string;
    }
 ```
+
+## Config
+You may configure start block and etherscan api base url:
+```sh
+cd config
+vim default.json
+```
