@@ -24,7 +24,7 @@
 ### Standalone
  - Clone the repository
  - Copy and rename ".env.example" file to ".env"
- - Fill in database credentials and etherscan api key. Keep in mind that you have to bootstrap database by yourself!
+ - Fill in database credentials and etherscan api key
     ```js
     DB_HOST=    // Dataabse host
     DB_PORT=    // Database port
@@ -35,6 +35,11 @@
 
     ETHERSCAN_APIKEY=   // Etherscan api key
     ```
+ - Bootstrap database
+   ```sh
+   npm run typeorm:bootstrap
+   npm run typeorm:migration:run
+   ```
  - Start application with 
    ```sh
    npm run build
